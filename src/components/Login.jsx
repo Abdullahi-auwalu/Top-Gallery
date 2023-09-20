@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Home from './Home';
 
 function Login({onLoginSuccess}) {
@@ -11,7 +11,7 @@ function Login({onLoginSuccess}) {
     e.preventDefault();
 
     // Check if the provided username and password are correct
-    if (username === 'user@gmail.com' && password === '1password') {
+    if (username === 'user@example.com' && password === '1Password') {
       // Set the isLoggedIn state to true upon successful login
       setIsLoggedIn(true);
     } else {

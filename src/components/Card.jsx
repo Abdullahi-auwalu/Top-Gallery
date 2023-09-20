@@ -1,5 +1,3 @@
-// import { useState } from 'react';
-
 function Card({ image, onDeleteImage }) {
   // Destructure the 'niceTag' property from the 'image' object
   const { niceTag } = image;
