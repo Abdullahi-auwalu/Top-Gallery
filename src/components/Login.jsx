@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Home from './Home';
 
-function Login({onLoginSuccess}) {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
