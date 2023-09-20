@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Card from './Card';
 
 function Home() {
   const [images, setImages] = useState(() => {
-    // Load images from local storage on component initialization
     const storedImages = localStorage.getItem('galleryImages');
     return storedImages ? JSON.parse(storedImages) : [];
   });
@@ -13,42 +13,26 @@ function Home() {
   const [filteredImages, setFilteredImages] = useState([...images]);
   const [loading, setLoading] = useState(false);
 
-  // Save images to local storage whenever images change
   useEffect(() => {
     localStorage.setItem('galleryImages', JSON.stringify(images));
   }, [images]);
 
-  const handleSearch = () => {
-    if (!searchTag) {
-      setFilteredImages([...images]);
-    } else {
-      const filtered = images.filter((image) =>
-        image.tags.includes(searchTag.toLowerCase())
-      );
-      setFilteredImages(filtered);
-    }
-  };
-
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      // Set loading to true while uploading
       setLoading(true);
 
-      // Simulate an upload delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Process and add the uploaded images to the state
       const newImages = acceptedFiles.map((file) => ({
         id: `new-${Date.now()}`,
         url: URL.createObjectURL(file),
         tags: [],
-        niceTag: '', // Added "Nice Tag" property
+        numberTag: images.length + 1, // Add the number tag
       }));
 
       setImages([...images, ...newImages]);
       setFilteredImages([...images, ...newImages]);
 
-      // Reset loading state
       setLoading(false);
     },
     [images]
@@ -67,21 +51,21 @@ function Home() {
   };
 
   const handleDeleteImage = (imageId) => {
-    // Filter out the image to be deleted
     const updatedImages = images.filter((image) => image.id !== imageId);
 
     setImages(updatedImages);
     setFilteredImages(updatedImages);
   };
 
-  const handleNiceTagChange = (imageId, niceTag) => {
-    // Update the "Nice Tag" of the selected image
-    const updatedImages = images.map((image) =>
-      image.id === imageId ? { ...image, niceTag } : image
-    );
-
-    setImages(updatedImages);
-    setFilteredImages(updatedImages);
+  const handleSearch = () => {
+    if (!searchTag) {
+      setFilteredImages([...images]);
+    } else {
+      const filtered = images.filter((image) =>
+        image.tags.includes(searchTag.toLowerCase())
+      );
+      setFilteredImages(filtered);
+    }
   };
 
   return (
@@ -103,14 +87,13 @@ function Home() {
         </button>
       </div>
 
-      {/* Dropzone */}
       <div
         {...getRootProps()}
         className="bg-gray-100 border-dashed border-2 border-gray-300 p-8 rounded-lg mb-4 cursor-pointer"
       >
         <input {...getInputProps()} />
         {loading ? (
-          <p className="text-gray-500 text-center">Uploading...</p>
+          <span className="loading loading-dots loading-sm"></span>
         ) : (
           <p className="text-gray-500 text-center">
             Drag and drop images here, or click to select files
@@ -118,7 +101,6 @@ function Home() {
         )}
       </div>
 
-      {/* Drag and drop gallery */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="gallery">
           {(provided) => (
@@ -135,38 +117,7 @@ function Home() {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <img
-                          src={image.url}
-                          alt={`Image ${image.id}`}
-                          className="w-full h-40 object-cover"
-                        />
-                        <div className="p-3">
-                          {image.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-block bg-gray-300 text-gray-700 px-2 py-1 rounded-full text-sm mr-2"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="Nice Tag"
-                          className="w-full p-2 border rounded"
-                          value={image.niceTag}
-                          onChange={(e) =>
-                            handleNiceTagChange(image.id, e.target.value)
-                          }
-                        />
-                        <button
-                          onClick={() => handleDeleteImage(image.id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-300"
-                        >
-                                                    Delete
-                        </button>
-                      </div>
+                      <Card image={image} onDeleteImage={handleDeleteImage} />
                     </li>
                   )}
                 </Draggable>
@@ -181,4 +132,3 @@ function Home() {
 }
 
 export default Home;
-
