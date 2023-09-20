@@ -11,16 +11,16 @@ function App() {
   };
 
   // Function to handle logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  // };
 
   return (
     <>
       {!isLoggedIn ? (
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
-        <Home onLogout={handleLogout} />
+        <Home />
       )}
     </>
   );
