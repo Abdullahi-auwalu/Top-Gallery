@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+// import { useState } from 'react';
 
 function Card({ image, onDeleteImage }) {
-  const [niceTag, setNiceTag] = useState(image.niceTag);
+  // Destructure the 'niceTag' property from the 'image' object
+  const { niceTag } = image;
 
+  // Create a function to handle 'niceTag' changes
   const handleNiceTagChange = (e) => {
-    setNiceTag(e.target.value);
+    onDeleteImage(image.id, e.target.value);
   };
 
   // Ensure that image.tags is defined before mapping over it
@@ -27,6 +29,13 @@ function Card({ image, onDeleteImage }) {
           </span>
         ))}
       </div>
+
+      <input
+        type="text"
+        value={niceTag}
+        onChange={handleNiceTagChange}
+        className="w-full p-2 border rounded"
+      />
 
       <button
         onClick={() => onDeleteImage(image.id)}

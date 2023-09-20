@@ -61,8 +61,8 @@ function Home() {
     if (!searchTag) {
       setFilteredImages([...images]);
     } else {
-      const filtered = images.filter((image) =>
-        image.tags.includes(searchTag.toLowerCase())
+      const filtered = images.filter(
+        (image) => image.numberTag.toString() === searchTag
       );
       setFilteredImages(filtered);
     }
@@ -74,7 +74,7 @@ function Home() {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search by tag"
+          placeholder="Search by number tag"
           className="w-full sm:w-64 p-2 border rounded"
           value={searchTag}
           onChange={(e) => setSearchTag(e.target.value)}
